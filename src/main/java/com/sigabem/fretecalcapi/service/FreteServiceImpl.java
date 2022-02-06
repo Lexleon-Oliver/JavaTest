@@ -32,7 +32,7 @@ public class FreteServiceImpl implements FreteService {
             Cep cepDestinatario = freteClient.listarCep(cep);
             if (verificarCep(cepDestinatario)) {
                 freteDTO.setDataPrevistaEntrega(calcularEntrega(cepRemetente, cepDestinatario));
-                freteDTO.setVlTotalFrete(calcularValorFrete(freteDTO.getDataPrevistaEntrega(), freteDTO.getPeso()));
+                freteDTO.setVlTotalFrete(calcularValorFrete(freteDTO.getDataPrevistaEntrega(), freteDTO.getPeso().replace(",", ".")));
                 Frete freteParaSalvar = mapper.toModel(freteDTO);
                 Frete freteSalvo = repository.save(freteParaSalvar);
                 String valorFrete = String.format("%.2f", freteSalvo.getVlTotalFrete()).replace(".", ",");

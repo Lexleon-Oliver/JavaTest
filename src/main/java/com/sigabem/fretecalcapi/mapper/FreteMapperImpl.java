@@ -18,7 +18,7 @@ public class FreteMapperImpl implements FreteMapper{
                 .id(freteDTO.getId())
                 .cepDestino(freteDTO.getCepDestino())
                 .cepOrigem(freteDTO.getCepOrigem())
-                .peso(Double.parseDouble(freteDTO.getPeso()))
+                .peso(Double.parseDouble(freteDTO.getPeso().replace(",",".")))
                 .nomeDestinatario(freteDTO.getNomeDestinatario())
                 .dataConsulta((LocalDate.now()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .dataPrevistaEntrega(freteDTO.getDataPrevistaEntrega().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
