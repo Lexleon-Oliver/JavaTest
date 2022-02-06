@@ -1,7 +1,7 @@
 package com.sigabem.fretecalcapi.resource;
 
 import com.sigabem.fretecalcapi.dto.response.ErrorMessageResponse;
-import com.sigabem.fretecalcapi.exception.CepInvalidException;
+import com.sigabem.fretecalcapi.exception.InputInvalidException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -26,10 +26,10 @@ public class ErrorResource extends ResponseEntityExceptionHandler {
         return new ErrorMessageResponse(500, ex.getLocalizedMessage(), "Internal Server Error", "Internal Server Error Exception");
     }
 
-    @ExceptionHandler(CepInvalidException.class)
+    @ExceptionHandler(InputInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessageResponse cepInvalidError(Exception ex, WebRequest req){
-        return new ErrorMessageResponse(400, ex.getLocalizedMessage(), "Dado de Entrada Incorreto", "Cep Invalid Exception");
+    public ErrorMessageResponse inputInvalidError(Exception ex, WebRequest req){
+        return new ErrorMessageResponse(400, ex.getLocalizedMessage(), "Dado de Entrada Incorreto", "Input Invalid Exception");
     }
 
     @Override

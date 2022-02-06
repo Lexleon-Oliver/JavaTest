@@ -3,7 +3,7 @@ package com.sigabem.fretecalcapi.service;
 import com.sigabem.fretecalcapi.dto.request.FreteDTO;
 import com.sigabem.fretecalcapi.dto.response.MessageResponse;
 import com.sigabem.fretecalcapi.entity.Frete;
-import com.sigabem.fretecalcapi.exception.CepInvalidException;
+import com.sigabem.fretecalcapi.exception.InputInvalidException;
 import com.sigabem.fretecalcapi.frete.Cep;
 import com.sigabem.fretecalcapi.frete.FreteClient;
 import com.sigabem.fretecalcapi.mapper.FreteMapper;
@@ -28,10 +28,17 @@ public class FreteServiceImpl implements FreteService {
         int cep = Integer.parseInt(freteDTO.getCepOrigem().replace("-",""));
         Cep cepRemetente = freteClient.listarCep(cep);
         if (verificarCep(cepRemetente)) {
+            freteDTO.setCepOrigem(cepRemetente.getCep());
             cep = Integer.parseInt(freteDTO.getCepDestino().replace("-",""));
             Cep cepDestinatario = freteClient.listarCep(cep);
             if (verificarCep(cepDestinatario)) {
+                freteDTO.setCepDestino(cepDestinatario.getCep());
                 freteDTO.setDataPrevistaEntrega(calcularEntrega(cepRemetente, cepDestinatario));
+                try {
+                    double peso = Double.parseDouble(freteDTO.getPeso());
+                }catch (Exception erro){
+                    throw new InputInvalidException("Valor informado para peso é inválido");
+                }
                 freteDTO.setVlTotalFrete(calcularValorFrete(freteDTO.getDataPrevistaEntrega(), freteDTO.getPeso().replace(",", ".")));
                 Frete freteParaSalvar = mapper.toModel(freteDTO);
                 Frete freteSalvo = repository.save(freteParaSalvar);
@@ -44,10 +51,10 @@ public class FreteServiceImpl implements FreteService {
                         .vlTotalFrete("R$ " + valorFrete)
                         .build();
             } else {
-                throw new CepInvalidException("Cep do destinatário digitado é inválido");
+                throw new InputInvalidException("Cep do destinatário digitado é inválido");
             }
         } else {
-            throw new CepInvalidException("Cep do remetente digitado é inválido");
+            throw new InputInvalidException("Cep do remetente digitado é inválido");
         }
     }
 
