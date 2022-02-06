@@ -25,6 +25,7 @@ public class FreteServiceImpl implements FreteService {
 
     @Override
     public MessageResponse calcularFrete(FreteDTO freteDTO) {
+        validarCep(freteDTO.getCepOrigem(), freteDTO.getCepDestino());
         int cep = Integer.parseInt(freteDTO.getCepOrigem().replace("-",""));
         Cep cepRemetente = freteClient.listarCep(cep);
         if (verificarCep(cepRemetente)) {
@@ -35,7 +36,7 @@ public class FreteServiceImpl implements FreteService {
                 freteDTO.setCepDestino(cepDestinatario.getCep());
                 freteDTO.setDataPrevistaEntrega(calcularEntrega(cepRemetente, cepDestinatario));
                 try {
-                    double peso = Double.parseDouble(freteDTO.getPeso());
+                    double peso = Double.parseDouble(freteDTO.getPeso().replace(",","."));
                 }catch (Exception erro){
                     throw new InputInvalidException("Valor informado para peso é inválido");
                 }
@@ -55,6 +56,19 @@ public class FreteServiceImpl implements FreteService {
             }
         } else {
             throw new InputInvalidException("Cep do remetente digitado é inválido");
+        }
+    }
+
+    private void validarCep(String cepOrigem, String cepDestino) {
+        try {
+            Integer.parseInt(cepOrigem.replace("-",""));
+        }catch (Exception erro){
+            throw new InputInvalidException("Valor informado para cep de origem é inválido");
+        }
+        try {
+            Integer.parseInt(cepDestino.replace("-",""));
+        }catch (Exception erro){
+            throw new InputInvalidException("Valor informado para cep de destino é inválido");
         }
     }
 

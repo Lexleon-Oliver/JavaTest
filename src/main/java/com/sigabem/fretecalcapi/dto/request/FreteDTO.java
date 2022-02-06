@@ -19,6 +19,7 @@ public class FreteDTO {
     private String peso;
     @NotNull(message = "O cep de origem é obrigatório e não pode ser nulo")
     @Size(min = 8,max = 9,message = "O cep deve conter 8 numeros. O traço '-' é opcional")
+
     private String cepOrigem;
     @Size(min = 8,max = 9,message = "O cep deve conter 8 numeros. O traço '-' é opcional")
     @NotNull(message = "O cep de destino é obrigatório e não pode ser nulo")
